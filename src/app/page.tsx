@@ -1,5 +1,7 @@
 
 export default function Home() {
+  const post
+
   return (
       <div className="flex flex-col items-start relative w-[1280px] h-[800px] bg-white">
         <header
@@ -43,6 +45,9 @@ export default function Home() {
                   id="name"
                   className="w-full max-w-[448px] h-[32px] mt-2 p-4 border border-[#DBE0E6] rounded-lg"
               />
+              <input type={"file"} id="file"
+                     className="max-w-[448px] h-[32px]"
+              />
             </div>
 
             <div className="flex justify-end mt-8">
@@ -62,3 +67,4 @@ export default function Home() {
       </div>
   );
 }
+
