@@ -1,9 +1,18 @@
 import { supabase } from "./supabase";
 
-// export const fetchTodoList = async () => {
-//     const todoItems = await supabase.from('todo_items').select('*');
-//     return todoItems.data;
-// };
+export type Post = {
+    name: string,
+}
+
+export const fetchTodoList = async (): Promise<Post[]> => {
+    const { data, error } = await supabase.from('post').select('*');
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data as Post[];
+};
 
 export const addTodoItem = async (name: string) => {
   await supabase.from("post").insert({ name: name });

@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
-import { addTodoItem } from "../../utils/supabaseFunction";
+import {useEffect, useState} from "react";
+import {addTodoItem, fetchTodoList, Post} from "../../utils/supabaseFunction";
 
 export default function Home() {
   const [name, setName] = useState("");
+  const [posts, setPosts] = useState<Post[]>([])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value); // 入力された値を状態にセット
@@ -12,6 +13,15 @@ export default function Home() {
   const handleAddItems = () => {
     addTodoItem(name);
   };
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      const fetchedPosts = await fetchTodoList();
+      setPosts(fetchedPosts);  // `Post[]` を渡す
+    };
+
+    loadPosts();  // 非同期関数を呼び出す
+  }, []);
 
   return (
     <div className="flex flex-col items-start relative w-[1280px] h-[800px] bg-white">
@@ -49,7 +59,8 @@ export default function Home() {
             Add a new person to your memory palace
           </p>
 
-          <div className="mt-4 p-2 flex flex-row justify-between items-center gap-4 w-full h-[72px] bg-white rounded-lg">
+          <div
+              className="mt-4 p-2 flex flex-row justify-between items-center gap-4 w-full h-[72px] bg-white rounded-lg">
             <div>
               <span className="block text-base font-medium text-[#121417]">
                 Photos
@@ -65,41 +76,38 @@ export default function Home() {
 
           <div className="mt-6">
             <label
-              htmlFor="name"
-              className="block text-base font-medium text-[#121417]"
+                htmlFor="name"
+                className="block text-base font-medium text-[#121417]"
             >
               Name
             </label>
             <input
-              type="text"
-              id="name"
-              className="w-full max-w-[448px] h-[32px] mt-2 p-4 border border-[#DBE0E6] rounded-lg"
-              onChange={handleChange}
+                type="text"
+                id="name"
+                className="w-full max-w-[448px] h-[32px] mt-2 p-4 border border-[#DBE0E6] rounded-lg"
+                onChange={handleChange}
             />
-            <input type={"file"} id="file" className="max-w-[448px] h-[32px]" />
+            <input type={"file"} id="file" className="max-w-[448px] h-[32px]"/>
           </div>
 
           <div className="flex justify-end mt-8">
             <button
-              className="bg-[#1A80E6] text-white font-bold text-sm rounded-lg px-4 h-10"
-              onClick={handleAddItems}
+                className="bg-[#1A80E6] text-white font-bold text-sm rounded-lg px-4 h-10"
+                onClick={handleAddItems}
             >
               Submit
             </button>
           </div>
+          <div>
+            {posts.map((post, index) => (
+                <div key={index}>{post.name}</div>
+            ))}
+          </div>
+          <></>
         </div>
       </main>
 
-      <footer className="flex flex-col items-center w-full h-[152px] px-5 py-10">
-        <ul className="flex flex-row gap-6">
-          <li className="text-sm text-[#637587]">Contact</li>
-          <li className="text-sm text-[#637587]">Help</li>
-          <li className="text-sm text-[#637587]">About</li>
-        </ul>
-        <div className="mt-6 text-sm text-[#637587]">
-          © 2023 Facial Memory Inc.
-        </div>
-      </footer>
+
     </div>
   );
 }
